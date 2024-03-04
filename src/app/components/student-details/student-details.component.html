@@ -1,0 +1,40 @@
+<div class="container">
+@if(studentsData && studentsData.length >0){
+    <table class="table table-striped" id="table">
+        <thead>
+            <tr>
+                <th scope="col" class="text-center">S.N.</th>
+                <th scope="col" class="text-center">Image</th>
+                <th scope="col" class="text-center">Name</th>
+                <th scope="col" class="text-center">Email</th>
+                <th scope="col" class="text-center">Phone</th>
+                <th scope="col" class="text-center">City</th>
+                <th scope="col" class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <tr *ngFor="let student of studentsData; let i = index">
+                <th scope="row" class="text-center">{{i+1}}</th>
+                <td class="text-center">
+                    <a href="#" class="nav-link">
+                        <img class="rounded-circle me-lg-2" src="{{student.user_image ? imagePath + student.user_image : 'assets/images/placeholder.jpeg' }}" alt="" style="width: 40px; height: 40px;">            
+                    </a>
+                </td>
+                <td class="text-center">{{student.firstname}} {{student.lastname}}</td>
+                <td class="text-center">{{student.email}}</td>
+                <td class="text-center">{{student.phone}}</td>
+                <td class="text-center">{{student.city}}</td>
+                <td class="text-center">
+                    <a [routerLink]="['/user/update', student.id]" class="btn btn-warning btn-sm me-1">Update</a>
+                    <button class="btn btn-danger btn-sm ms-1" (click)="deleteUser(student.id, student.firstname)">Delete</button>
+                </td>   
+            </tr>
+        </tbody>
+    </table>
+}
+@else {
+    <h3>No Student Found</h3>
+}
+</div>
+

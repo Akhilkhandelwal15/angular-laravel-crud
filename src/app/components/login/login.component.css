@@ -1,0 +1,5 @@
+.spinner-container {
+  display: flex;
+  justify-content: center; /* Horizontally center the spinner */
+  align-items: center; /* Vertically center the spinner */
+}

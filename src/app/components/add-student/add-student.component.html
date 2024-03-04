@@ -1,0 +1,203 @@
+<div class="container mt-3">
+    <div class="bg-light rounded h-100 p-4">
+        @if(studentId!=null){
+            <h6 class="mb-4">Update User</h6>
+        }@else {
+            <h6 class="mb-4">Add User</h6>
+        }
+        
+        <form [formGroup]="addStudentForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="fname" class="form-label">Firstname</label>
+                    <input type="text" class="form-control" id="fname" placeholder="Enter Firstname" name="fname" formControlName="firstname">
+                    <div *ngIf="f.firstname.invalid && (f.firstname.dirty || isClick)" class="text-danger">
+                        <div *ngIf="f.firstname.errors.required">Firstname is required.</div>  
+                    </div>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="lname" class="form-label">Lastname</label>
+                    <input type="text" class="form-control" id="lname" placeholder="Enter Lastname" name="lname" formControlName="lastname">
+                </div>
+            </div>
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter Email" name="email" formControlName="email">
+                    <div *ngIf="f.email.invalid && (f.email.dirty || isClick)" class="text-danger">
+                        <div *ngIf="f.email.errors.required">Email is required.</div> 
+                        <div *ngIf="f.email.errors.pattern">Enter a valid email address</div> 
+                        <div *ngIf="f.email.errors?.emailExists">Email already exists</div>  
+                    </div>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="uname" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="uname" placeholder="Enter Username" name="uname" formControlName="username" >
+                    <div *ngIf="f.username.invalid && (f.username.dirty || isClick)" class="text-danger">
+                        <div *ngIf="f.username.errors.required">Username is required.</div>  
+                        <div *ngIf="f.username.errors.minlength">Username should be atleast 5 charecters long</div>  
+                        <div *ngIf="f.username.errors.maxlength">Username should be less than 8 charecters</div>  
+                        <div *ngIf="f.username.errors?.usernameExists">Username already exists</div>  
+                    </div>
+                </div>
+            </div>
+            @if(studentId==null){
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="pswd" placeholder="Enter Password" name="password" formControlName="password">
+                        <div *ngIf="f.password.invalid && (f.password.dirty || isClick)" class="text-danger">
+                            <div *ngIf="f.password.errors.required">Password is required.</div>  
+                            @if(f.password.errors.minlength){
+                                <div>Password should be atleast 5 charecters long</div>  
+                            }@else if(f.password.errors.maxlength){
+                                <div>Password should be less than 8 charecters</div>
+                            }@else if(f.password.errors.pattern){
+                                <div>Password should contain at least one Capital letter, numeric value and Symbol</div>
+                            }
+                            
+                        </div>
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label for="password" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="cnfpswd" placeholder="Confirm Password" name="cnfpassword" formControlName="cnfpassword">
+                        <div *ngIf="f.cnfpassword.invalid && (f.cnfpassword.dirty || isClick)" class="text-danger">
+                            <div *ngIf="f.cnfpassword.errors.required"> Confirm Password is required.</div>  
+                            <div *ngIf="f.cnfpassword.errors.minlength">Confirm password should be atleast 5 charecters long</div>  
+                            <div *ngIf="f.cnfpassword.errors.maxlength">Confirm password should be less than 8 charecters</div>
+                            <div *ngIf="f.cnfpassword.errors.passwordMismatch">
+                                Confirm password does not match the original password.
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            }
+           
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="tel" class="form-control" id="phone" placeholder="Enter Phone number" name="phone" formControlName="phone">
+                    <div *ngIf="f.phone.invalid && (f.phone.dirty || isClick)" class="text-danger">
+                    <div *ngIf="f.phone.errors.required">Phone is required.</div>  
+                    @if(f.phone.errors.pattern){
+                        <div>Enter a valid phone number.</div> 
+                    }@else if (f.phone.errors.minlength) {
+                        <div>Phone Number should be of 10 digits</div>  
+                    }@else if(f.phone.errors.maxlength){
+                        <div>Phone Number should be of 10 digits</div>   
+                    }
+                        
+                    </div>
+                </div>
+                    <div class="mb-3 col-md-6">
+                    <label for="address" class="form-label">Address</label>
+                    <textarea class="form-control" placeholder="Enter Address" id="address" style="height: 50px;" spellcheck="false" formControlName="address"></textarea>
+                    
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="mb-3 col-md-6">
+                    <label for="country" class="form-label">Country</label>
+                    <select class="form-select" id="country" formControlName="country" (change)="stateByCountry($event)">
+                        <option value="" selected disabled>Select Country</option>
+                        <option *ngFor="let country of countryData" [value]="country.id">{{country.name}}</option>
+                    </select>
+                   
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="state" class="form-label">State</label>
+                    <select class="form-select" id="state" formControlName="state" (change)="cityByState($event)">
+                        <option value="" selected disabled>Select State</option>
+                        <option *ngFor="let state of stateData" [value]="state.id">{{state.name}}</option>
+                    </select>
+                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label for="city" class="form-label">City</label>
+                    <select class="form-select" id="city" formControlName="city">
+                        <option value="" selected disabled>Select City</option>
+                        <option *ngFor="let city of cityData" [value]="city.id">{{city.name}}</option>
+                    </select>
+                    
+                </div>
+                <div class="form-check mb-3 col-md-6">
+                    <label for="skills" class="form-label">Skills</label>
+                    <div class="row pt-2">
+                        <div class="form-check col">
+                            <input class="form-check-input" type="checkbox" value="" id="cpp" formControlName="cpp">
+                            <label class="form-check-label" for="cpp">
+                              C++
+                            </label>
+                          </div>
+                          <div class="form-check col">
+                            <input class="form-check-input" type="checkbox" value="" id="java" formControlName="java">
+                            <label class="form-check-label" for="java">
+                              Java
+                            </label>
+                          </div>
+                          <div class="form-check col">
+                            <input class="form-check-input" type="checkbox" value="" id="angular" formControlName="angular">
+                            <label class="form-check-label" for="angular">
+                              Angular
+                            </label>
+                          </div>
+                          <div class="form-check col">
+                            <input class="form-check-input" type="checkbox" value="" id="laravel" formControlName="laravel">
+                            <label class="form-check-label" for="laravel">
+                              Laravel
+                            </label>
+                          </div>
+                    </div>
+                   
+                    
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="qualification" class="form-label">Qualification</label>
+                        <div class="row">
+                        <div class="form-check col">
+                            <input class="form-check-input" type="radio" value="ug" name="qualification" id="ug" formControlName="qualification">
+                            <label class="form-check-label" for="ug">
+                                Under Graduate
+                            </label>
+                        </div>
+                        <div class="form-check col">
+                            <input class="form-check-input" type="radio" value="pg" name="qualification" id="pg" formControlName="qualification">
+                            <label class="form-check-label" for="pg">
+                                Post Graduate
+                            </label>
+                        </div>
+                        
+                    </div>
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <div class="image-select">
+                            <div>
+                                <label for="image" class="form-label">Upload Image</label>
+                                <input class="form-control" type="file" accept="image/*"  id="image" formControlName="image" (change)="onImageUpload($event)">
+                            </div>
+                            <div class="img-preview">
+                                <img [src]="url" alt="user image" />
+                                @if(imageValue!=""){
+                                    <button type="button" (click)="imageRemoveButton()">X</button>
+                                }
+                            </div>
+                        </div>
+                        <div *ngIf="addStudentForm.get('image').invalid && addStudentForm.get('image').touched">
+                            <p class="error-message text-danger">Invalid file type. Please upload a valid file.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+            @if(studentId!=null){
+                Update User
+            }@else {
+                Add User
+            }
+        </button>
+        </form>
+    </div>
+    </div>
